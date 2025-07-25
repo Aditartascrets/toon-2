@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Brainroot Video Prompt Generator</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f4f4f4; }
+    h1 { color: #333; }
+    .section { margin-bottom: 1.5em; }
+    .prompt-box { background: #fff; padding: 1em; border-radius: 10px; margin-bottom: 1em; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .copy-btn { float: right; margin-top: -2em; background: #222; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+    .prompt-output { white-space: pre-wrap; font-family: monospace; }
+    button.generate { padding: 10px 20px; font-size: 1em; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>🎥 Brainroot Video Prompt Generator</h1>
+
+  <div class="section">
+    <label><strong>Select Locations / Activities:</strong></label><br/>
+    <div id="scene-options"></div>
+  </div>
+
+  <div class="section">
+    <label><strong>Narration Style:</strong></label>
+    <select id="narrationStyle">
+      <option value="calm">Calm</option>
+      <option value="documentary">Documentary</option>
+      <option value="sarcastic">Sarcastic</option>
+      <option value="poetic">Poetic</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <button class="generate" onclick="generatePrompts()">Generate Prompts</button>
+  </div>
+
+  <div id="output"></div>
+
+  <script>
+    const scenes = [
+      "Street ramen at night",
+      "Shrine in the misty forest",
+      "Traditional tea ceremony",
+      "Tokyo rooftop sunset",
+      "Riding the Shinkansen",
+      "Cherry blossom park",
+      "Night walk in Osaka",
+      "Rainy alley with neon lights",
+      "Arashiyama bamboo forest",
+      "Talking with local old man in a village",
+      "Exploring a quiet abandoned school",
+      "Visiting a hidden bookshop in Kyoto",
+      "Walking along a river at dusk",
+      "Entering an AI-run convenience store",
+      "Observing cats in a peaceful alley",
+      "Late-night vending machine area",
+      "Marketplace full of local foods",
+      "Forest shrine at sunrise",
+      "Lost temple in the fog",
+      "Train crossing under golden sky"
+    ];
+
+    const optionsContainer = document.getElementById('scene-options');
+    scenes.forEach((scene, index) => {
+      const checkbox = `<label><input type="checkbox" value="${scene}" /> ${scene}</label><br/>`;
+      optionsContainer.innerHTML += checkbox;
+    });
+
+    function generatePrompts() {
+      const selected = [...document.querySelectorAll('input[type="checkbox"]:checked')].map(c => c.value);
+      const style = document.getElementById('narrationStyle').value;
+      const output = document.getElementById('output');
+      output.innerHTML = "";
+
+      selected.forEach((scene, index) => {
+        const visual = `Ultra-detailed anime cinematic scene of "${scene.toLowerCase()}".`;
+        const narration = `Voice-over (style: ${style}): "Now, we find ourselves ${scene.toLowerCase()}... the story unfolds."`;
+        const fullPrompt = visual + '\n' + narration;
+
+        output.innerHTML += `
+          <div class="prompt-box">
+            <button class="copy-btn" onclick="copyPrompt('prompt${index}')">Copy</button>
+            <div id="prompt${index}" class="prompt-output">${fullPrompt}</div>
+          </div>
+        `;
+      });
+    }
+
+    function copyPrompt(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => alert("Prompt copied!"));
+    }
+  </script>
+
+</body>
+</html>
